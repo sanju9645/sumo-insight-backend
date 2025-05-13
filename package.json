@@ -4,7 +4,7 @@
   "main": "./src/server.ts",
   "scripts": {
     "dev": "nodemon",
-    "build": "npm install && npx tsc",
+    "build": "npm install && npm install typescript && npx tsc",
     "start": "node dist/server.js",
     "upload-sample-api-logs": "npm run build && node dist/tools/uploadSampleApiLogs.js",
     "process-logs": "ts-node src/tools/sumologic-log-processor.ts",
