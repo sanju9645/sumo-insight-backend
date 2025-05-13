@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 
 import { apiAnalysisTableName } from '../utils/envUtils';
 import { apiAnalysisTableColumns } from '../utils/utils';
-import { testConnection } from '../config/mysql';
 import { connectMongoDb } from "../config/mongodb";
 import { ApiAnalysisModel } from "../types";
 
@@ -25,37 +24,6 @@ const apiAnalysisSchema = new mongoose.Schema({
 const ApiAnalysis = mongoose.model<ApiAnalysisModel>(apiAnalysisTableName(), apiAnalysisSchema);
 
 const csvFilePath = './src/uploads/api_logs.csv';
-
-const processMySQLData = async (logs: any[]): Promise<void> => {
-  const connection = await testConnection();
-  try {
-    // Process logs in smaller batches
-    const batchSize = 100;
-    for (let i = 0; i < logs.length; i += batchSize) {
-      const batch = logs.slice(i, i + batchSize);
-      const values = batch.map(log => [
-        log[columns.date],
-        log[columns.api_endpoint],
-        log[columns.count],
-        log[columns.avg_p_time]
-      ]);
-      const tableName = apiAnalysisTableName();
-      
-      const query = `
-        INSERT INTO ${tableName} (${columns.date}, ${columns.api_endpoint}, ${columns.count}, ${columns.avg_p_time})
-        VALUES ? 
-        ON DUPLICATE KEY UPDATE 
-        ${columns.count} = VALUES(${columns.count}),
-        ${columns.avg_p_time} = VALUES(${columns.avg_p_time})
-      `;
-      
-      await connection.query(query, [values]);
-      console.log(`Processed ${i + batch.length} of ${logs.length} records`);
-    }
-  } finally {
-    connection.release();
-  }
-};
 
 const processMongoData = async (logs: any[]): Promise<void> => {
   // Process logs in smaller batches
@@ -102,18 +70,12 @@ const processCsvData = async (): Promise<void> => {
       })
       .on('end', async () => {
         try {
-          if (process.env.DATABASE_TYPE === 'MySQL') {
-            await processMySQLData(logs);
-          } else if (process.env.DATABASE_TYPE === 'MongoDB') {
-            await connectMongoDb({
-              serverSelectionTimeoutMS: 30000,
-              socketTimeoutMS: 45000,
-            });
-            await processMongoData(logs);
-            await mongoose.disconnect();
-          } else {
-            throw new Error('Invalid DATABASE_TYPE specified in');
-          }
+          await connectMongoDb({
+            serverSelectionTimeoutMS: 30000,
+            socketTimeoutMS: 45000,
+          });
+          await processMongoData(logs);
+          await mongoose.disconnect();
           resolve();
         } catch (error) {
           reject(error);

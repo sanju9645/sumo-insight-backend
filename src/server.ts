@@ -3,8 +3,6 @@ import cors from "cors";
 import "dotenv/config";
 
 import { connectMongoDb } from "./config/mongodb";
-import { testConnection } from "./config/mysql";
-
 import userRoute from "./routes/user.route";
 import insightRoute from "./routes/insight.route";
 
@@ -42,7 +40,6 @@ app.use("/api/insight", insightRoute);
   try {
     // Ensure the connection is successful before starting the server
     await connectMongoDb();
-    await testConnection(); // This will throw an error if the connection fails
     console.log("DB connection established, starting server...");
 
     // Start the server after successful database connection

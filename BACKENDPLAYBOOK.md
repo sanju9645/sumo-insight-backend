@@ -18,7 +18,7 @@ npm init -y
 ### ✅ Production Dependencies
 
 ```bash
-npm i @huggingface/inference @types/nodemailer @types/twilio cors csv-parser dotenv express express-oauth2-jwt-bearer express-validator fs jsonwebtoken moment-timezone mongoose mysql2 node-fetch nodemailer openai twilio yargs
+npm i @huggingface/inference @types/nodemailer @types/twilio cors csv-parser dotenv express express-oauth2-jwt-bearer express-validator fs jsonwebtoken moment-timezone mongoose node-fetch nodemailer openai twilio yargs
 ```
 
 ### 🧪 Development Dependencies
@@ -38,14 +38,6 @@ npm i ts-node typescript nodemon @types/express @types/cors @types/node @types/j
 PORT=3000
 NODE_ENV=development
 
-# 💾 Database (Choose your type: MongoDB or MySQL)
-DATABASE_TYPE=MongoDB
-
-# 🐬 MySQL Configuration
-DB_HOST=localhost
-DB_USER=<db-user>
-DB_PASSWORD=<db-password>
-DB_NAME=<db-name>
 
 # 🍃 MongoDB Configuration
 MONGODB_CONNECTION_STRING=<mongodb-connection-string>
@@ -153,40 +145,6 @@ http://localhost:3000/health
 
 ```env
 MONGODB_CONNECTION_STRING=mongodb+srv://sumo-insight:<db_password>@cluster0.exx36.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-```
-
----
-
-## 🐬 MySQL Setup
-
-1. Log in as root.
-
-2. Create database:
-
-```sql
-CREATE DATABASE sumo_insight;
-```
-
-3. Create user:
-
-```sql
-CREATE USER 'insight_user'@'localhost' IDENTIFIED BY '<password>';
-```
-
-4. Grant access:
-
-```sql
-GRANT ALL PRIVILEGES ON sumo_insight.* TO 'insight_user'@'localhost';
-FLUSH PRIVILEGES;
-```
-
-5. Add this to your `.env`:
-
-```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=your_database_name
 ```
 
 ---
@@ -304,3 +262,78 @@ npx ts-node src/tools/san-test.ts
 ```bash
 npm run san-test
 ```
+
+
+
+---
+
+## 🚀 Deployment
+
+### 1. Update `tsconfig.json`
+
+Ensure your `tsconfig.json` contains the following configuration:
+
+```json
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    ...
+  }
+}
+```
+
+---
+
+### 2. Update `package.json` Scripts
+
+Make sure your `package.json` includes the following scripts:
+
+```json
+"scripts": {
+  "dev": "nodemon",
+  "build": "npm install && npx tsc",
+  "start": "node dist/server.js",
+  ...
+}
+```
+
+---
+
+### 3. Build the Project
+
+```bash
+npm run build
+```
+
+This will compile the TypeScript files and create a `dist` folder.
+
+---
+
+### 4. Start the Server
+
+```bash
+npm start
+```
+
+Your server should now be running on **port 3000**.
+
+---
+
+### 5. Deploy on [Render](https://render.com)
+
+1. Go to [render.com](https://render.com)
+2. Click on **"New Web Service"**
+3. Connect your GitHub repository
+4. Fill in the details:
+
+   * **Name:** `sumo-insight-backend`
+   * **Project:** `Sumo Insight`
+   * **Language:** `Node`
+   * **Branch:** `Production`
+   * **Region:** `Oregon (US West)`
+   * **Root Directory (Optional):** leave blank
+   * **Build Command:** `npm run build`
+   * **Start Command:** `npm start`
+5. **Add Environment Variables** as required
+
+---
