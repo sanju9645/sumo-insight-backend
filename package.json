@@ -1,10 +1,10 @@
 {
   "name": "sumo-insight-backend",
   "version": "1.0.0",
-  "main": "./src/server.ts",
+  "main": "./dist/server.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "npm install && npm install typescript && npx tsc",
+    "build": "npm install && npx tsc",
     "start": "node dist/server.js",
     "upload-sample-api-logs": "npm run build && node dist/tools/uploadSampleApiLogs.js",
     "process-logs": "ts-node src/tools/sumologic-log-processor.ts",
@@ -27,7 +27,6 @@
     "express": "^4.21.2",
     "express-oauth2-jwt-bearer": "^1.6.0",
     "express-validator": "^7.2.1",
-    "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.48",
     "mongoose": "^8.9.4",
@@ -46,6 +45,6 @@
     "@types/yargs": "^17.0.33",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   }
 }
