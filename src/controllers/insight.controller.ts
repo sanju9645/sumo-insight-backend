@@ -4,15 +4,12 @@ import dotenv from "dotenv";
 import ApiAnalysis from "../models/apiAnalysis.model";
 import { apiAnalysisTableColumns } from '../utils/utils';
 import {InsightApiLogsResponse, ApiAnalysisModel } from "../types";
-import { pool } from "../config/mysql";
-import { apiAnalysisTableName } from "../utils/envUtils";
 import Configuration from '../models/configuration.model';
 import ApiAnalysisEndpointClassification from "../models/ApiEndpointClassification";
 
 dotenv.config();
 
 const columns = apiAnalysisTableColumns();
-const tableName = apiAnalysisTableName();
 
 const getSumoApiLogs: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -24,29 +21,14 @@ const getSumoApiLogs: RequestHandler = async (req: Request, res: Response): Prom
     const startDate = new Date(start as string);
     const endDate = new Date(end as string);
     endDate.setHours(23, 59, 59, 999); // Include the entire end day
-    let records = [];
 
-    if (process.env.DATABASE_TYPE == 'MongoDB') {
-      const rows = await ApiAnalysis.find({
-        date: {
-          $gte: startDate,
-          $lte: endDate,
-        },
-      }).lean();
-      records = rows;
-    } else {
-      const query = `
-        SELECT 
-          ${columns.date} AS date,
-          ${columns.api_endpoint} AS api_endpoint,
-          ${columns.count} AS count,
-          ${columns.avg_p_time} AS avg_p_time
-        FROM ${tableName}
-        WHERE ${columns.date} BETWEEN '${start}' AND '${end}';
-      `;
-      const [rows] = await pool.query(query);
-      records = (rows as any[]);
-    }
+    const rows = await ApiAnalysis.find({
+      date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    }).lean();
+    const records = rows;
 
     const formattedData: InsightApiLogsResponse[] = records.map((record: ApiAnalysisModel, index: number) => ({
       id: index + 1,

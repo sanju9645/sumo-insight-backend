@@ -75,12 +75,6 @@ class SumoLogicProcessor {
   }
 
   async processLogs(targetDate?: string): Promise<void> {
-    // Check DATABASE_TYPE environment variable
-    if (process.env.DATABASE_TYPE !== 'MongoDB') {
-      console.log('Skipping MongoDB insertion as DATABASE_TYPE is not set to MongoDB');
-      return;
-    }
-
     // Use provided date or default to current date
     const processDate = targetDate 
       ? moment(targetDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
@@ -231,12 +225,6 @@ class SumoLogicProcessor {
   }
 
   async processLogsInDateRange(startDate: string, endDate: string): Promise<void> {
-    // Check DATABASE_TYPE environment variable
-    if (process.env.DATABASE_TYPE !== 'MongoDB') {
-      console.log('Skipping MongoDB insertion as DATABASE_TYPE is not set to MongoDB');
-      return;
-    }
-
     // Convert start and end dates to moment objects
     const start = moment(startDate, 'YYYY-MM-DD');
     const end = moment(endDate, 'YYYY-MM-DD');
