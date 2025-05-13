@@ -1,0 +1,56 @@
+{
+  "name": "sumo-insight-backend",
+  "version": "1.0.0",
+  "description": "Turning raw API data into actionable intelligence. Processing, refining, and serving insight — the engine behind the intelligence",
+  "main": "./src/server.ts",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "npm install && npx tsc",
+    "start": "node dist/server.js",
+    "upload-sample-api-logs": "npm run build && node dist/tools/uploadSampleApiLogs.js",
+    "process-logs": "ts-node src/tools/sumologic-log-processor.ts",
+    "san-test": "ts-node src/tools/san-test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanju9645/sumo-insight-backend.git"
+  },
+  "keywords": [],
+  "author": "Osprey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sanju9645/sumo-insight-backend/issues"
+  },
+  "homepage": "https://github.com/sanju9645/sumo-insight-backend#readme",
+  "dependencies": {
+    "@huggingface/inference": "^3.13.0",
+    "@types/nodemailer": "^6.4.17",
+    "@types/twilio": "^3.19.2",
+    "cors": "^2.8.5",
+    "csv-parser": "^3.2.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-oauth2-jwt-bearer": "^1.6.1",
+    "express-validator": "^7.2.1",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.48",
+    "mongoose": "^8.14.2",
+    "mysql2": "^3.14.1",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^7.0.3",
+    "openai": "^4.98.0",
+    "twilio": "^5.6.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.15.17",
+    "@types/yargs": "^17.0.33",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
