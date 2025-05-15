@@ -21,6 +21,7 @@ const ApiAnalysisSchema: Schema = new Schema<ApiAnalysisModel>({
   [columns.api_endpoint]: {
     type: String,
     maxlength: 255,
+    index: false, // Explicitly disable automatic index creation
   },
   [columns.count]: {
     type: Number,
