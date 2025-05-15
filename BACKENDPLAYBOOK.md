@@ -337,3 +337,356 @@ Your server should now be running on **port 3000**.
 5. **Add Environment Variables** as required
 
 ---
+
+
+---
+**Complete code and step-by-step guide** to Dockerize your `sumo-insight-backend` project for both **development** and **production** environments.
+
+---
+
+## ✅ Project: `sumo-insight-backend`
+
+### 📁 Final Directory Structure:
+
+```
+sumo-insight-backend/
+├── src/                       # Your TypeScript source code
+├── dist/                      # Compiled JS (output from `tsc`)
+├── .env                       # Environment variables
+├── .dockerignore
+├── Dockerfile                 # For Production
+├── Dockerfile.dev             # For Development
+├── docker-compose.yml         # For Production
+├── docker-compose.dev.yml     # For Development
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+---
+
+## ⚙️ 1. Create `.env` file
+
+Place this at the root of your backend repo (`sumo-insight-backend/.env`):
+
+```env
+PORT=3000
+NODE_ENV=development
+
+MONGODB_CONNECTION_STRING=<your-mongodb-uri>
+
+AUTH0_AUDIENCE=<your-auth0-audience>
+AUTH0_ISSUER_BASE_URL=<your-auth0-issuer>
+
+API_ANALYSIS_TABLE_NAME_DEV=<value>
+API_ANALYSIS_TABLE_NAME_PROD=<value>
+API_ANALYSIS_ENDPOINT_CLASSIFICATION_TABLE_NAME_DEV=<value>
+API_ANALYSIS_ENDPOINT_CLASSIFICATION_TABLE_NAME_PROD=<value>
+
+ADMIN_EMAILS=<emails>
+
+SUMO_BASE_URL=<url>
+SUMO_ACCESS_ID=<id>
+SUMO_ACCESS_KEY=<key>
+
+SMTP_USER=<email>
+SMTP_PASS=<pass>
+
+HUGGINGFACE_API_KEY=<key>
+HUGGINGFACE_MODEL=<model>
+
+TWILIO_ACCOUNT_SID=<sid>
+TWILIO_AUTH_TOKEN=<token>
+TWILIO_PHONE_NUMBER=<phone>
+
+API_REWRITE_MAP=<json-string>
+
+DEEP_SEEK_API_KEY=<key>
+DEEP_SEEK_URL=<url>
+
+OPEN_AI_KEY=<openai-key>
+```
+
+---
+
+## 🐳 2. `.dockerignore`
+
+```dockerignore
+node_modules
+dist
+.env
+```
+
+---
+
+## 📦 3. `Dockerfile` (Production)
+
+```Dockerfile
+# Production Dockerfile
+
+FROM node:20-alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --omit=dev
+
+COPY . .
+
+RUN npm run build
+
+CMD ["node", "dist/server.js"]
+```
+
+---
+
+## 🛠️ 4. `Dockerfile.dev` (Development)
+
+```Dockerfile
+# Development Dockerfile
+
+FROM node:20
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+# For live-reloading
+RUN npm install -g nodemon
+
+COPY . .
+
+CMD ["npm", "run", "dev"]
+```
+
+---
+
+## 🐳 5. `docker-compose.yml` (Production)
+
+```yaml
+version: '3.8'
+
+services:
+  backend:
+    container_name: sumo-backend-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    restart: always
+```
+
+---
+
+## 🐳 6. `docker-compose.dev.yml` (Development)
+
+```yaml
+version: '3.8'
+
+services:
+  backend:
+    container_name: sumo-backend-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+    command: npm run dev
+```
+
+---
+
+## 🏁 7. How to Use It
+
+### ➤ Development (with hot reload):
+
+```bash
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+### ➤ Production (build and run):
+
+```bash
+docker-compose up --build
+```
+
+---
+
+## 🚢 8. Build & Push Production Image to Docker Hub
+
+### Step 1: Build image
+
+```bash
+docker build -t your-dockerhub-username/sumo-insight-backend .
+```
+
+### Step 2: Push to Docker Hub
+
+```bash
+docker push your-dockerhub-username/sumo-insight-backend
+```
+
+---
+
+## 📥 9. Deploy on Any Server (or Render)
+
+```bash
+# Pull image from Docker Hub
+docker pull your-dockerhub-username/sumo-insight-backend
+
+# Run the container
+docker run -d -p 3000:3000 --env-file .env your-dockerhub-username/sumo-insight-backend
+```
+
+Or you can deploy on **Render**:
+
+* Set up a new **Web Service**
+* Use your DockerHub repo URL
+* Add your `.env` variables in Render UI
+* Set port to `3000`
+* Set start command: `node dist/server.js`
+
+---
+
+## 👥 Volumes in Cross-Platform Dev
+
+In `docker-compose.dev.yml`, this line handles platform-neutral volumes:
+
+```yaml
+volumes:
+  - .:/usr/src/app
+  - /usr/src/app/node_modules
+```
+
+---
+
+
+---
+
+## Example README Overview for Your Docker Hub Repo
+
+---
+
+# Sumo Insight Backend Docker Image
+
+This Docker image contains the backend service for **Sumo Insight**.
+Use this image to run the backend in **development** or **production** environments easily.
+
+---
+
+### 🚀 How to Pull the Image
+
+```bash
+docker pull your-dockerhub-username/sumo-insight-backend:latest
+```
+
+---
+
+### ⚙️ Environment Variables (.env file)
+
+Create a `.env` file on your host machine with the following required variables:
+
+```env
+PORT=3000
+NODE_ENV=development
+
+MONGODB_CONNECTION_STRING=<your-mongodb-connection-string>
+
+AUTH0_AUDIENCE=<your-auth0-audience>
+AUTH0_ISSUER_BASE_URL=<your-auth0-issuer-base-url>
+
+API_ANALYSIS_TABLE_NAME_DEV=<your-dev-api-analysis-table-name>
+API_ANALYSIS_TABLE_NAME_PROD=<your-prod-api-analysis-table-name>
+
+ADMIN_EMAILS=<comma-separated-admin-emails>
+
+SUMO_BASE_URL=<your-sumo-base-url>
+SUMO_ACCESS_ID=<your-sumo-access-id>
+SUMO_ACCESS_KEY=<your-sumo-access-key>
+
+SMTP_USER=<your-smtp-user>
+SMTP_PASS=<your-smtp-pass>
+
+HUGGINGFACE_API_KEY=<your-huggingface-api-key>
+HUGGINGFACE_MODEL=<your-huggingface-model>
+
+TWILIO_ACCOUNT_SID=<your-twilio-account-sid>
+TWILIO_AUTH_TOKEN=<your-twilio-auth-token>
+TWILIO_PHONE_NUMBER=<your-twilio-phone-number>
+
+API_REWRITE_MAP=<your-api-rewrite-map-json-string>
+
+DEEP_SEEK_API_KEY=<your-deepseek-api-key>
+DEEP_SEEK_URL=<your-deepseek-url>
+
+OPEN_AI_KEY=<your-openai-api-key>
+```
+
+> Replace `<...>` placeholders with your actual credentials.
+
+---
+
+### 🛠️ Running the Backend
+
+#### Development mode (with live reload):
+
+```bash
+docker run -it --rm -p 3000:3000 --env-file .env -v ${PWD}:/app -v /app/node_modules your-dockerhub-username/sumo-insight-backend:latest npm run dev
+```
+
+---
+
+#### Production mode:
+
+```bash
+docker run -d -p 3000:3000 --env-file .env your-dockerhub-username/sumo-insight-backend:latest npm start
+```
+
+---
+
+### 🐳 Using Docker Compose (recommended)
+
+Save this as `docker-compose.yml`:
+
+```yaml
+version: "3.8"
+services:
+  backend:
+    image: your-dockerhub-username/sumo-insight-backend:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev  # Change to 'npm start' for production
+```
+
+Run with:
+
+```bash
+docker-compose up
+```
+
+---
+
+### 📌 Notes
+
+* Make sure to keep your `.env` file secure — it contains sensitive credentials.
+* When running in production, you may want to build your image with production optimizations and run with `npm start`.
+* Volume mounting (`-v`) is helpful for local development, but should be avoided in production.
+
+---
+

@@ -74,3 +74,59 @@ Your server should now be running on **port 3000**.
 5. **Add Environment Variables** as required
 
 ---
+
+
+## 🛠️ Environment Configuration
+
+> Create a `.env` file in the root of your project and add the following variables:
+
+```env
+# 🌐 Server
+PORT=3000
+NODE_ENV=development
+
+
+# 🍃 MongoDB Configuration
+MONGODB_CONNECTION_STRING=<mongodb-connection-string>
+
+# 🔐 Auth0
+AUTH0_AUDIENCE=<auth0-audience>
+AUTH0_ISSUER_BASE_URL=<auth0-issuer-base-url>
+
+# 📊 API Analysis Tables
+API_ANALYSIS_TABLE_NAME_DEV=<api-analysis-table-name-dev>
+API_ANALYSIS_TABLE_NAME_PROD=<api-analysis-table-name-prod>
+API_ANALYSIS_ENDPOINT_CLASSIFICATION_TABLE_NAME_DEV=<api-analysis-endpoint-classification-table-name-dev>
+API_ANALYSIS_ENDPOINT_CLASSIFICATION_TABLE_NAME_PROD=<api-analysis-endpoint-classification-table-name-prod>
+
+# 👥 Admin Access
+ADMIN_EMAILS=<admin-emails>
+
+# 📈 Sumo Logic
+SUMO_BASE_URL=<sumo-base-url>
+SUMO_ACCESS_ID=<sumo-access-id>
+SUMO_ACCESS_KEY=<sumo-access-key>
+
+# 📬 Google Mailer
+SMTP_USER=<smtp-user>
+SMTP_PASS=<smtp-pass>
+
+# 🤗 Hugging Face
+HUGGINGFACE_API_KEY=<huggingface-api-key>
+HUGGINGFACE_MODEL=<huggingface-model>
+
+# 📞 Twilio
+TWILIO_ACCOUNT_SID=<twilio-account-sid>
+TWILIO_AUTH_TOKEN=<twilio-auth-token>
+TWILIO_PHONE_NUMBER=<twilio-phone-number>
+
+# 🛡️ API Masking
+API_REWRITE_MAP=<json-api-rewrite-map>
+
+# 🔍 DeepSeek
+DEEP_SEEK_API_KEY=<deepseek-api-key>
+DEEP_SEEK_URL=<deepseek-url>
+
+# 🧠 OpenAI
+OPEN_AI_KEY=<openai-key>
+```
