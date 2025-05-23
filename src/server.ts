@@ -5,6 +5,7 @@ import "dotenv/config";
 import { connectMongoDb } from "./config/mongodb";
 import userRoute from "./routes/user.route";
 import insightRoute from "./routes/insight.route";
+import logProcessorRoute from './routes/log-processor.route';
 
 const app = express();
 
@@ -20,7 +21,6 @@ const PORT: number = parseInt(process.env.PORT || '3000', 10);
 app.use(cors());
 app.use(express.json());
 
-
 /**
  * -------------- ROUTES ----------------
  */
@@ -31,6 +31,8 @@ app.get("/health", async (req: Request, res: Response) => {
 
 app.use("/api/user", userRoute);
 app.use("/api/insight", insightRoute);
+app.use('/api/log-processor', logProcessorRoute);
+
 
 
 /**

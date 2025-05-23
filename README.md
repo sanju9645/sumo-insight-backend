@@ -2,6 +2,48 @@
 Turning raw API data into actionable intelligence. Processing, refining, and serving insight — the engine behind the intelligence
 
 
+## Database Configuration
+
+This project uses **MongoDB** as the database.
+
+
+### ✅ Create a MongoDB Atlas Database
+
+1. Go to [https://www.mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas) and **sign up** or **log in**.
+2. Click **“Build a Database”**
+3. Select:
+
+   * **Deployment**: Shared
+   * **Provider**: Any (AWS, GCP, Azure)
+   * **Region**: Choose closest to your location
+4. Click **Create Cluster**
+5. Once deployed:
+
+   * Go to **Database Access**, and create a **new database user** with a password.
+   * Go to **Network Access**, and **add IP whitelist**: `0.0.0.0/0` (for development purposes).
+   * Go to **Clusters → Connect → Connect Your Application**
+   * Copy the **MongoDB connection string**, e.g.:
+
+     ```
+     mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/<dbname>?retryWrites=true&w=majority
+     ```
+
+```env
+PORT=3000
+FRONTEND_PORT=5173
+
+NODE_ENV=development
+
+MONGODB_CONNECTION_STRING=<your-mongodb-connection-string>
+AUTH0_AUDIENCE=sumo-insight
+AUTH0_ISSUER_BASE_URL=https://<your-auth0-domain>/
+```
+
+* **MONGODB\_CONNECTION\_STRING**: Your MongoDB URI (e.g., `mongodb+srv://<user>:<pass>@cluster.mongodb.net/dbname`).
+* **AUTH0\_AUDIENCE**: Must match the API Identifier created in Auth0.
+* **AUTH0\_ISSUER\_BASE\_URL**: This is `https://<your-auth0-domain>/`.
+
+
 ---
 
 ## 🚀 Deployment
