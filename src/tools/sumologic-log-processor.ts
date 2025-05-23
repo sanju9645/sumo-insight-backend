@@ -18,22 +18,26 @@ import { makeVoiceCall } from '../config/twilio-voice';
 import { rewriteApiEndpoint } from '../utils/utils';
 const columns = apiAnalysisTableColumns();
 
-class SumoLogicProcessor {
+export class SumoLogicProcessor {
   private uri: string;
   private accessId: string;
   private accessKey: string;
   private sumologicQuery: string;
 
-  constructor(uri: string, accessId: string, accessKey: string) {
-    this.uri = uri;
-    this.accessId = accessId;
-    this.accessKey = accessKey;
+  constructor() {
+    if (!process.env.SUMO_BASE_URL || !process.env.SUMO_ACCESS_ID || !process.env.SUMO_ACCESS_KEY) {
+      throw new Error('Required Sumo Logic credentials are missing');
+    }
+    this.uri = process.env.SUMO_BASE_URL;
+    this.accessId = process.env.SUMO_ACCESS_ID;
+    this.accessKey = process.env.SUMO_ACCESS_KEY;
     this.sumologicQuery = '';
   }
 
   async initialize() {
-    const config = await getConfigurationAsJson();
-    this.sumologicQuery = config.sumologicQuery.replace(/\\n/g, ' ').replace(/\\/g, '');
+    await connectMongoDb();
+    // const config = await getConfigurationAsJson();
+    // this.sumologicQuery = config.sumologicQuery.replace(/\\n/g, ' ').replace(/\\/g, '');
   }
 
   private createQuery(targetDate: string): any {
@@ -280,27 +284,21 @@ class SumoLogicProcessor {
       console.error('Error sending alert email:', error);
     }
   }
+
+  async initProcessLogs(startDate?: string, endDate?: string, date?: string): Promise<void> {
+    if (startDate && endDate) {
+      await this.processLogsInDateRange(startDate, endDate);
+    } else if (date) {
+      await this.processLogs(date);
+    } else {
+      await this.processLogs(); 
+    }
+  }
 }
 
 // Main function to connect to MongoDB and run the processor
 async function main() {
   try {
-    // Connect to MongoDB
-    await connectMongoDb();
-
-    // Validate Sumo Logic credentials
-    if (!process.env.SUMO_ACCESS_ID || !process.env.SUMO_ACCESS_KEY) {
-      throw new Error('Sumo Logic credentials not provided');
-    }
-
-    const processor = new SumoLogicProcessor(
-      process.env.SUMO_BASE_URL || '',
-      process.env.SUMO_ACCESS_ID, 
-      process.env.SUMO_ACCESS_KEY
-    );
-
-    // await processor.initialize();
-
     // Parse command-line arguments with support for start and end dates
     const argv = await yargs(process.argv.slice(2))
       .option('start-date', {
@@ -322,17 +320,9 @@ async function main() {
       .alias('help', 'h')
       .parse();
 
-    // Process logs based on provided arguments
-    if (argv.startDate && argv.endDate) {
-      // Process date range
-      await processor.processLogsInDateRange(argv.startDate, argv.endDate);
-    } else if (argv.date) {
-      // Process single date
-      await processor.processLogs(argv.date);
-    } else {
-      // Process current date by default
-      await processor.processLogs();
-    }
+    const processor = new SumoLogicProcessor();
+    await processor.initialize();
+    await processor.initProcessLogs(argv.startDate, argv.endDate, argv.date);
   } catch (error) {
     console.error('Error in main process:', error);
     process.exit(1);
