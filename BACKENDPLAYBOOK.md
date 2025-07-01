@@ -599,7 +599,6 @@ Create a `.env` file on your host machine with the following required variables:
 
 ```env
 PORT=3000
-NODE_ENV=development
 
 MONGODB_CONNECTION_STRING=<your-mongodb-connection-string>
 
