@@ -4,7 +4,8 @@
   "main": "./dist/server.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "npm install && npx tsc",
+    "build": "npm install && npx tsc && npm run copy-assets",
+    "copy-assets": "mkdir -p dist/utils && cp src/utils/email-template.html dist/utils/",
     "start": "node dist/server.js",
     "upload-sample-api-logs": "npm run build && node dist/tools/uploadSampleApiLogs.js",
     "process-logs": "ts-node src/tools/sumologic-log-processor.ts",
