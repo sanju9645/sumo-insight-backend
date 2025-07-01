@@ -25,8 +25,7 @@ app.use(express.json());
  * -------------- ROUTES ----------------
  */
 app.get("/health", async (req: Request, res: Response) => {
-
-  res.send({ message: "health OK! We are in " + process.env.NODE_ENV + " mode" });
+  res.send({ message: "health OK!" });
 });
 
 app.use("/api/user", userRoute);

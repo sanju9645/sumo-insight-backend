@@ -55,7 +55,6 @@ const getSumoApiLogs: RequestHandler = async (req: Request, res: Response): Prom
 
     res.json(finalData);
   } catch (error) {
-    console.error('Error fetching or formatting API analysis data:', error);
     res.status(500).json({ error: 'Error fetching data' });
   }
 };
@@ -66,7 +65,7 @@ export const configureInsights = async (req: Request, res: Response) => {
     const savedConfigurations = [];
 
     for (const [key, content] of Object.entries(configurations)) {
-      if (key in ['notesDescription', 'sumologicQuery']) {
+      if (key === 'notesDescription' || key === 'sumologicQuery') {
         let existingInsight = await Configuration.findOne({ key });
 
         if (existingInsight) {

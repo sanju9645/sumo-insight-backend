@@ -5,7 +5,7 @@ dotenv.config();
 
 // Function to check if the environment is production
 export const isProd = (): boolean => {
-  return process.env.NODE_ENV === 'production';
+  return process?.env?.NODE_ENV === 'production';
 };
 
 // Function to get the API analysis table name based on the environment

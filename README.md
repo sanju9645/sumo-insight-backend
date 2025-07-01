@@ -32,7 +32,6 @@ This project uses **MongoDB** as the database.
 PORT=3000
 FRONTEND_PORT=5173
 
-NODE_ENV=development
 
 MONGODB_CONNECTION_STRING=<your-mongodb-connection-string>
 AUTH0_AUDIENCE=sumo-insight
@@ -125,7 +124,6 @@ Your server should now be running on **port 3000**.
 ```env
 # 🌐 Server
 PORT=3000
-NODE_ENV=development
 
 
 # 🍃 MongoDB Configuration
