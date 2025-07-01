@@ -332,15 +332,17 @@ async function main() {
   }
 }
 
-// Run the main function
-main().catch(console.error);
+// Run the main function only if this file is executed directly
+if (require.main === module) {
+  main().catch(console.error);
+}
 
 // Updated usage examples:
 // Process logs for current date
 // npm run process-logs
 
 // Process logs for a specific date
-// npm run process-logs -- -d 2025-04-20
+// npm run process-logs -- -d 2025-06-20
 
 // Process logs for a date range
 // npm run process-logs -- -s 2024-04-10 -e 2024-04-23

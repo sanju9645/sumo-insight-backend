@@ -39,17 +39,17 @@ export class EmailContentGenerator {
       historicalData
     });
     
-    try {
-      const response = await generateDeepSeekContent(prompt);
-      const content = await callHuggingFaceAPI(prompt);
-      return {
-        html: this.formatEmailContent(content.html, apiPath, metricType, value, threshold, operator, historicalData),
-        plain: content.plain
-      };
-    } catch (error) {
-      console.error('Error generating email content:', error);
+    // try {
+    //   const response = await generateDeepSeekContent(prompt);
+    //   const content = await callHuggingFaceAPI(prompt);
+    //   return {
+    //     html: this.formatEmailContent(content.html, apiPath, metricType, value, threshold, operator, historicalData),
+    //     plain: content.plain
+    //   };
+    // } catch (error) {
+      // console.error('Error generating email content:', error);
       return this.generateFallbackContent(apiPath, metricType, value, threshold, operator, historicalData);
-    }
+    // }
   }
 
   /**
